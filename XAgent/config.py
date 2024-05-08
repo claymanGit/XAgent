@@ -151,11 +151,14 @@ def get_model_name(model_name: str = None):
             normalized_model_name = 'gpt-4-1106-preview'
         case 'gpt-4-turbo':
             normalized_model_name = 'gpt-4-1106-preview'
+
+        case 'gpt-3.5-turbo':
+            normalized_model_name = "gpt-3.5-turbo"
+
         case 'gpt-3.5-turbo-16k':
             normalized_model_name = 'gpt-3.5-turbo-16k'
         case 'gpt-3.5-turbo-1106':
             normalized_model_name = 'gpt-3.5-turbo-1106'
-
         case 'gpt4':
             normalized_model_name = 'gpt-4'
         case 'gpt4-32':
@@ -164,6 +167,10 @@ def get_model_name(model_name: str = None):
             normalized_model_name = 'gpt-3.5-turbo-16k'
         case 'xagentllm':
             normalized_model_name = 'xagentllm'
+
+        case 'wenxin-3.5-turbo-16k':
+            normalized_model_name = "wenxin-3.5-turbo-16k"
+
         case _:
             raise Exception(f"Unknown model name {model_name}")
 

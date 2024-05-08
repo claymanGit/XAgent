@@ -57,6 +57,7 @@ class OBJGenerator:
         try:   
             copyed_kwargs = deepcopy(kwargs)
             if (response := recorder.query_llm_inout(llm_query_id = llm_query_id,**copyed_kwargs)) is None:
+                #执行llm 请求并返回llm 结果
                 response = self._get_chatcompletion_request_func(request_type)(**kwargs)
             recorder.regist_llm_inout(llm_query_id = llm_query_id,**copyed_kwargs,output_data = response)
         except Exception as e:
@@ -69,6 +70,8 @@ class OBJGenerator:
             # refine the response
             match request_type:
                 case 'openai':                
+                    response = self.function_call_refine(kwargs,response)
+                case 'wenxin':                
                     response = self.function_call_refine(kwargs,response)
                 case 'xagent':
                     pass
@@ -191,7 +194,12 @@ class OBJGenerator:
             raise FunctionCallSchemaError(f"No function call found in the response: {response['choices'][0]['message']} ")
 
         # verify the schema of the function call if exists
-        function_schema = list(filter(lambda x: x['name'] == response['choices'][0]['message']['function_call']['name'],req_kwargs['functions']))
+        function_schema = []
+        from collections.abc import Iterable
+        if 'functions' in req_kwargs and isinstance(req_kwargs["functions"], Iterable):
+            filt = filter(lambda x: x['name'] == response['choices'][0]['message']['function_call']['name'], req_kwargs['functions'])
+            print(filt)
+            function_schema = list(filt)
         function_schema = None if len(function_schema) == 0 else function_schema[0]
         
         if function_schema is None:

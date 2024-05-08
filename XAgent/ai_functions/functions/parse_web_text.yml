@@ -1,7 +1,7 @@
-completions_kwargs:
-  model: "gpt-3.5-turbo-16k"
-  temperature: 0.6
-  request_timeout: 60
+#completions_kwargs:
+  #model: "gpt-3.5-turbo-16k"
+  #temperature: 0.6
+  #request_timeout: 60
 function_prompt: |
   I will give you the text gathered from a webpage and a prompt to help you parse it, please remember that the content you provide should be as same language as the webpage you are parsing.
   -- Webpage -- 

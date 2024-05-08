@@ -1,8 +1,11 @@
 """XAgent Redis Client"""
 from redis import Redis
-
-from XAgentServer.application.core.envs import XAgentServerEnv
 import os
+curdir = os.path.dirname(os.path.abspath(__file__))
+rootdir = os.path.join(curdir, "../../")
+import sys 
+sys.path.append(rootdir)
+from XAgentServer.application.core.envs import XAgentServerEnv
 
 
 class RedisClient:

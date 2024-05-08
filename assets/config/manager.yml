@@ -13,6 +13,7 @@ node:
   creation_kwargs:
     image: "xagentteam/toolserver-node:latest"
     network: "tool-server-network"
+    #是否使用docker 容器启动toolnode
     privileged: true
     detach: true
     volumes:

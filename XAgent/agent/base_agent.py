@@ -126,7 +126,11 @@ class BaseAgent(metaclass=abc.ABCMeta):
                     *args,**kwargs)
                 
                 message = {}
-                function_call_args:dict = json5.loads(response["choices"][0]["message"]["function_call"]['arguments'])
+                if isinstance(response["choices"][0]["message"]["function_call"]['arguments'], dict):
+                    function_call_args:dict = response["choices"][0]["message"]["function_call"]['arguments']
+                else:
+                    function_call_args:dict = json5.loads(response["choices"][0]["message"]["function_call"]['arguments'])
+                    
                 
                 if arguments is not None:
                     message['arguments'] = {
@@ -138,7 +142,46 @@ class BaseAgent(metaclass=abc.ABCMeta):
                         'name': response['choices'][0]['message']['function_call']['name'],
                         'arguments': function_call_args
                     }
-
+            case 'wenxin':
+                if arguments is not None:
+                    if functions is None or len(functions) == 0:
+                        functions = [{
+                            'name':'reasoning',
+                            'parameters':arguments
+                        }]
+                        function_call = {'name':'reasoning'}
+                    elif len(functions) == 1:
+                        for k,v in arguments['properties'].items():
+                            functions[0]['parameters']['properties'][k] = v
+                            if k in arguments['required']:
+                                functions[0]['parameters']['required'].append(k)
+                    else:
+                        raise NotImplementedError("Not implemented for multiple functions with arguments")
+                    
+                response = objgenerator.chatcompletion(
+                    messages=messages,
+                    functions=functions,
+                    function_call=function_call,
+                    stop=stop,
+                    *args,**kwargs)
+                
+                message = {}
+                if isinstance(response["choices"][0]["message"]["function_call"]['arguments'], dict):
+                    function_call_args:dict = response["choices"][0]["message"]["function_call"]['arguments']
+                else:
+                    function_call_args:dict = json5.loads(response["choices"][0]["message"]["function_call"]['arguments'])
+                    
+                
+                if arguments is not None:
+                    message['arguments'] = {
+                        k: function_call_args.pop(k)
+                        for k in arguments['properties'].keys() if k in function_call_args
+                    }
+                if len(function_call_args) > 0:
+                    message['function_call'] = {
+                        'name': response['choices'][0]['message']['function_call']['name'],
+                        'arguments': function_call_args
+                    }
             case 'xagent':
                 response = objgenerator.chatcompletion(
                     messages=messages,
@@ -147,7 +190,11 @@ class BaseAgent(metaclass=abc.ABCMeta):
                     function_call=function_call,
                     stop=stop,
                     *args,**kwargs)
-                message = json5.loads(response["choices"][0]["message"]['content'])
+                if isinstance(response["choices"][0]["message"]['content'], dict):
+                    message = response["choices"][0]["message"]['content']
+                else:
+                    message = json5.loads(response["choices"][0]["message"]['content'])
+                    
             case _:
                 raise NotImplementedError(f"Request type {CONFIG.default_request_type} not implemented")
             

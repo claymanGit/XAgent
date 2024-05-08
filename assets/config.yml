@@ -1,21 +1,28 @@
 api_keys:
   gpt-3.5-turbo-16k:
-    - api_key: sk-xxxxx
-      api_base: https://example.com
-      api_type: azure
-      api_version: 2023-07-01-preview
-      engine: GPT-35-Turbo-16k
+    #- api_key: sk-BkUvD8cDWxB6uMsGXp9r3dTpUMMoYhQEgtTu260nuCuk0d5I
+      #api_base: https://api.chatanywhere.tech/v1
+      #api_type: azure
+      #api_version: 2023-07-01-preview
+      #engine: gpt-3.5-turbo-16k
       # you can use any kwargs supported by openai.ChatCompletion here
-    - api_key: sk-xxxxx
+    - api_key: sk-ug8f6Bd4CWpA99xdFf8d9bCb0eBd404a85D255F4558eFeE6
+      base_url: https://uiuiapi.com/v1
       organization: org-xxxxxx
       model: gpt-3.5-turbo-16k
+  gpt-3.5-turbo:
+    - api_key: sk-kN37NWPx85IcT2Ur3c2d99F48d7840Aa902381BcC5246dB1
+      base_url: https://uiuiapi.com/v1
+      organization: org-xxxxxx
+      model: gpt-3.5-turbo
   gpt-4:    
-    - api_key: sk-xxxxx
+    - api_key: sk-kN37NWPx85IcT2Ur3c2d99F48d7840Aa902381BcC5246dB1
+      base_url: https://uiuiapi.com/v1
       organization: org-xxxxx
       model: gpt-4
-    - api_key: sk-xxxxx
-      organization: org-xxxxxx
-      model: gpt-4
+    #- api_key: sk-xxxxx
+      #organization: org-xxxxxx
+      #model: gpt-4
   gpt-4-32k:
     - api_key: sk-xxxxx
       organization: org-xxxxx
@@ -24,10 +31,16 @@ api_keys:
       organization: org-xxxxxx
       model: gpt-4-32k
 
+  wenxin-3.5-turbo-16k: #区分模型大类别
+    - api_key: sk-kN37NWPx85IcT2Ur3c2d99F48d7840Aa902381BcC5246dB1
+      base_url: https://uiuiapi.com/v1
+      organization: org-xxxxxx
+      model: gpt-3.5-turbo-16k #具体请求api 输入的模型名称
 
-default_request_type: openai # or xagent
+
+default_request_type: openai # or xagent or openai
 default_completion_kwargs:
-  model: gpt-4-32k
+  model: gpt-3.5-turbo-16k
   temperature: 0.2
   request_timeout: 60
 
@@ -40,15 +53,18 @@ use_selfhost_toolserver: true
 selfhost_toolserver_url: http://localhost:8080
 
 max_retry_times: 5
-max_subtask_chain_length: 15
-max_plan_refine_chain_length: 3
-max_plan_tree_depth: 3
-max_plan_tree_width: 5
+#一个subtask 运行的轮次
+max_subtask_chain_length: 2
+#refine的次数，如果对于简单的问题，则这个最后设置为0
+max_plan_refine_chain_length: 0
+max_plan_tree_depth: 1
+max_plan_tree_width: 1
+# 限制一轮次token的使用长度，如果超过就立即终止
 max_plan_length: 8192
 
 rapidapi_retrieve_tool_count: 0
 
-enable_ask_human_for_help: False
+enable_ask_human_for_help: true
 
 tool_blacklist:
   - FileSystemEnv_print_filesys_struture

@@ -55,12 +55,14 @@ rapidapi:
   #please refer to  https://github.com/OpenBMB/ToolBench
   api_raw_json: ./assets/rapidapi_high_quality_apis.json
   api_infos_json: ./assets/rapidapi_apis_infos.json
+  # toolbench 访问key，当前还没申请到，所以当前未使用
   api_key: # toolbench key
   endpoint: # toolbench rapidapi endpoint
 
 shell:
   timeout: 300
-  
+
+# 可以起停需要使用的扩展（自己的工具等等）
 enabled_extensions:
   # - extensions.envs.rapidapi
 

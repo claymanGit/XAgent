@@ -93,6 +93,11 @@ class FunctionHandler():
                     'subtask_handle')
                 self.subtask_handle_function["parameters"]["properties"]["tool_call"][
                     "properties"]["tool_name"]["enum"] = function_name_list
+            case 'wenxin':
+                self.subtask_handle_function = function_manager.get_function_schema(
+                    'subtask_handle')
+                self.subtask_handle_function["parameters"]["properties"]["tool_call"][
+                    "properties"]["tool_name"]["enum"] = function_name_list                
             case 'xagent':
                 pass
             case _:

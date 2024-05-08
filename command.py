@@ -292,7 +292,7 @@ class CommandLine():
 
 if __name__ == "__main__":
     import sys
-    args = CommandLineParam()
+    args = CommandLineParam("none")
     if len(sys.argv) >= 2:
         print(sys.argv[1])
         if len(sys.argv) >= 3:
@@ -313,4 +313,5 @@ if __name__ == "__main__":
         args.role="Assistant",
         args.mode="auto",
         
-    cmd = CommandLine(XAgentServerEnv, args)
+    cmd = CommandLine(args)
+    cmd.start()

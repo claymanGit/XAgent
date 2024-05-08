@@ -305,7 +305,9 @@ class ReACTChainSearch(BaseSearchMethod):
             now_node = new_tree_node
 
             if tool_output_status_code == ToolCallStatusCode.SUBMIT_AS_SUCCESS:
-
+                self.status = SearchMethodStatusCode.HAVE_AT_LEAST_ONE_ANSWER
+                break
+            elif tool_output_status_code == ToolCallStatusCode.TOOL_CALL_SUCCESS:
                 self.status = SearchMethodStatusCode.HAVE_AT_LEAST_ONE_ANSWER
                 break
             elif tool_output_status_code == ToolCallStatusCode.SUBMIT_AS_FAILED:

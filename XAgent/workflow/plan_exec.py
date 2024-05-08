@@ -174,9 +174,13 @@ class PlanAgent():
             arguments=deepcopy(function_manager.get_function_schema('simple_thought')['parameters']),
             functions=[split_functions], 
         )
+        #subtasks = json5.loads(new_message["function_call"]["arguments"])
         
-        subtasks = json5.loads(new_message["function_call"]["arguments"])
-
+        if not isinstance(new_message["function_call"]["arguments"], dict):
+            subtasks = json5.loads(new_message["function_call"]["arguments"])
+        else:
+            subtasks = new_message["function_call"]["arguments"]
+        
         for subtask_item in subtasks["subtasks"]:
             subplan = plan_function_output_parser(subtask_item)
             Plan.make_relation(self.plan, subplan)
@@ -270,7 +274,10 @@ class PlanAgent():
                 additional_insert_index=-1,
             )
             function_name = new_message["function_call"]["name"]
-            function_input = json5.loads(new_message["function_call"]["arguments"])
+            if isinstance(new_message["function_call"]["arguments"], str):
+                function_input = json5.loads(new_message["function_call"]["arguments"])
+            else:
+                function_input = new_message["function_call"]["arguments"]
 
             if function_input['operation'] == 'split':
                 # modify function_input here

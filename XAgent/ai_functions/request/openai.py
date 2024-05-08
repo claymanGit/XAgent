@@ -136,7 +136,6 @@ else:
         )
         logger.debug("chatcompletion: using " + model_name)
         chatcompletion_kwargs = get_apiconfig_by_model(model_name)
-
         request_timeout = kwargs.pop("request_timeout", 60)
         if "api_version" in chatcompletion_kwargs:
             if "base_url" in chatcompletion_kwargs:
@@ -167,6 +166,13 @@ else:
             api_key = chatcompletion_kwargs.pop("api_key", None)
             organization = chatcompletion_kwargs.pop("organization", None)
             chatcompletion_kwargs.update(kwargs)
+            """
+            if "engine" in chatcompletion_kwargs:
+                model = chatcompletion_kwargs.pop("engine", None)
+            else:
+                model = chatcompletion_kwargs.pop("model", None)
+            chatcompletion_kwargs.update({"model": model})
+            """
             client = openai.OpenAI(
                 api_key=api_key,
                 organization=organization,

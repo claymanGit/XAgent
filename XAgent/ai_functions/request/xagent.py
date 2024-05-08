@@ -3,7 +3,6 @@ from XAgent.config import CONFIG,get_apiconfig_by_model,get_model_name
 import requests
 import traceback
 
-
 def chatcompletion_request(**kwargs):
     # logger.info(f"xagent received {json.dumps(kwargs)}")
     model_name = get_model_name(kwargs.pop('model',CONFIG.default_completion_kwargs['model']))

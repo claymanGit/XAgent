@@ -206,18 +206,27 @@ def summarize_plan(plans:dict)->str:
         
         if 'submit_result' in plan and 'args' in plan['submit_result']:
             submission = plan['submit_result']['args']
-            plan_des.append(f'[Action Status] {"Success" if submission["result"]["success"] else "Fail"}')
+            print(submission)
+            if "result" not in submission:
+                print(submission)
+                msg = f'[Action Status] {"Fail"}'
+            else:
+                msg = f'[Action Status] {"Success" if submission["result"]["success"] else "Fail"}'
+            plan_des.append(msg)
+            
+            #plan_des.append(f'[Action Status] {"Success" if submission["result"]["success"] else "Fail"}')
             
             # possible too long part
             action_des = [
                 '[Action Info]',
-                f"- [Conclusion] {submission['result']['conclusion']}"
+                f"- [Conclusion] {submission['result']['conclusion']}" if 'result' in submission else f"- [Conclusion] None"
             ]
             if 'action_list_summary' in plan:
                 action_des.append(f'- [Summary] {plan["action_list_summary"]}')  
-            if submission['suggestions_for_latter_subtasks_plan']['need_for_plan_refine']:
-                if submission['suggestions_for_latter_subtasks_plan']['reason'] != '':
-                    action_des.append(f"- [Proposal] {submission['suggestions_for_latter_subtasks_plan']['reason']}")
+            if "suggestions_for_latter_subtasks_plan" in submission:
+                if submission['suggestions_for_latter_subtasks_plan']['need_for_plan_refine']:
+                    if submission['suggestions_for_latter_subtasks_plan']['reason'] != '':
+                        action_des.append(f"- [Proposal] {submission['suggestions_for_latter_subtasks_plan']['reason']}")
             detailed_info[plan['task_id']] = action_des
         
         task_ids.append(plan['task_id'])

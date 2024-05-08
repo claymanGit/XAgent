@@ -56,7 +56,15 @@ def get_posterior_knowledge(all_plan: Plan,
         },
         arguments=function_manager.get_function_schema('generate_posterior_knowledge')['parameters']
     )
+    if isinstance(new_message["arguments"], str):
+        data = json5.loads(new_message["arguments"])
+    elif isinstance(new_message["arguments"], dict):
+        data = new_message["arguments"]
+    else:
+        print('ERROR:new_message["arguments"]')
+        print(new_message)
+        raise Exception('ERROR:new_message["arguments"]')
 
-    data = json5.loads(new_message["arguments"])
+    #data = json5.loads(new_message["arguments"])
 
     return data

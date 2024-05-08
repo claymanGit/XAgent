@@ -115,7 +115,23 @@ class FunctionManager:
                     function_call={'name':function_cfg['function']['name']},
                     **completions_kwargs
                 )
-                returns = json5.loads(response['choices'][0]['message']['function_call']['arguments'])
+                if isinstance(response['choices'][0]['message']['function_call']['arguments'], dict):
+                    returns = response['choices'][0]['message']['function_call']['arguments']
+                else:
+                    returns = json5.loads(response['choices'][0]['message']['function_call']['arguments'])
+
+            case 'wenxin':        
+                response = objgenerator.chatcompletion(
+                    messages=messages,
+                    functions=[function_cfg['function']],
+                    function_call={'name':function_cfg['function']['name']},
+                    **completions_kwargs
+                )
+                if isinstance(response['choices'][0]['message']['function_call']['arguments'], dict):
+                    returns = response['choices'][0]['message']['function_call']['arguments']
+                else:
+                    returns = json5.loads(response['choices'][0]['message']['function_call']['arguments'])
+
             case 'xagent':
                 arguments = function_cfg['function']['parameters']
                 response = objgenerator.chatcompletion(
@@ -123,8 +139,13 @@ class FunctionManager:
                     arguments=arguments,
                     **completions_kwargs
                 )
-                returns = json5.loads(response['choices'][0]['message']['content'])['arguments']
-        
+                if isinstance(response['choices'][0]['message']['content'], dict):
+                    rjsonl = response['choices'][0]['message']['content']
+                else:
+                    rjsonl = json5.loads(response['choices'][0]['message']['content'])
+                returns = rjsonl['arguments']
+                #returns = json5.loads(response['choices'][0]['message']['content'])
+                
         if return_generation_usage:
             return returns, response['usage']
         return returns

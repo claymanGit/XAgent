@@ -65,7 +65,7 @@ class ToolAgent(BaseAgent):
         messages = [message.raw() for message in messages]
         
         # Temporarily disable the arguments for openai
-        if self.config.default_request_type == 'openai':
+        if self.config.default_request_type == 'openai' or self.config.default_request_type == 'wenxin':
             arguments = None
             functions = list(filter(lambda x: x['name'] not in ['subtask_submit','subtask_handle'],functions))
             if CONFIG.enable_ask_human_for_help:
@@ -99,6 +99,8 @@ class ToolAgent(BaseAgent):
         )
 
         function_call_args:dict = message['function_call']['arguments']
+        if not isinstance(function_call_args, dict):
+            function_call_args = json5.loads(function_call_args)
 
         # for tool_call, we need to validate the tool_call arguments if exising
         if self.config.default_request_type == 'openai' and 'tool_call' in function_call_args:

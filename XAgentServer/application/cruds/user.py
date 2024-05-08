@@ -150,3 +150,9 @@ class UserCRUD(metaclass=abc.ABCMeta):
             UserDBInterface.update_user(db=db, user=user)
         except Exception as e:
             raise XAgentDBError(f"XAgent DB Error [User Module]: {str(e)}") from e
+
+if __name__ == "__main__":
+    from XAgentServer.database.connect import SessionLocal
+    db = SessionLocal()
+    ret = UserCRUD.is_exist(db, "guest")
+    print(ret)
