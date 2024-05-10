@@ -11,7 +11,12 @@ from XAgent.config import CONFIG
 if CONFIG.default_completion_kwargs['model'] == "xagentllm":
     encoding = tiktoken.encoding_for_model("gpt-4") # TODO: this is not good
 else:
-    encoding = tiktoken.encoding_for_model(CONFIG.default_completion_kwargs['model'])
+    if CONFIG.default_completion_kwargs['model'] == "wenxin-3.5-turbo-16k":
+        encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-16k")
+    else:
+        encoding = tiktoken.encoding_for_model(CONFIG.default_completion_kwargs['model'])
+
+    #encoding = tiktoken.encoding_for_model(CONFIG.default_completion_kwargs['model'])
 
 def get_token_nums(text:str)->int:
     """

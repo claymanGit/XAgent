@@ -197,21 +197,45 @@ class OBJGenerator:
         function_schema = []
         from collections.abc import Iterable
         if 'functions' in req_kwargs and isinstance(req_kwargs["functions"], Iterable):
-            filt = filter(lambda x: x['name'] == response['choices'][0]['message']['function_call']['name'], req_kwargs['functions'])
-            print(filt)
-            function_schema = list(filt)
+            print(response['choices'][0]['message']['function_call'])
+            item_ = response['choices'][0]['message']['function_call']
+            if isinstance(item_, dict) and 'name' in item_:
+                filt = filter(lambda x: x['name'] == response['choices'][0]['message']['function_call']['name'], req_kwargs['functions'])
+                print(filt)
+                function_schema = list(filt)
         function_schema = None if len(function_schema) == 0 else function_schema[0]
         
         if function_schema is None:
-            if '"{}"'.format(response['choices'][0]['message']['function_call']['name']) in req_kwargs['messages'][0]['content']:
-                # Temporal fix for tool call without reasoning
-                logger.typewriter_log("Warning: Detect tool call without reasoning",Fore.YELLOW)
-                response['choices'][0]['message']['function_call']['arguments'] = orjson.dumps({
-                    'tool_call':{
-                        'tool_name':response['choices'][0]['message']['function_call']['name'],
-                        'tool_input':response['choices'][0]['message']['function_call']['arguments']
-                    }
-                })
+            #print(1, req_kwargs['messages'][0]['content'])
+            #print(2, response['choices'][0]['message']['function_call']['name'])
+            if response['choices'] is None or req_kwargs['messages'] is None:
+                print("error")
+                return response
+            try:
+                function_call = response['choices'][0]['message']['function_call']
+                if function_call is None:
+                    logger.typewriter_log("Warning: Detect tool call without reasoning",Fore.YELLOW)
+                    response['choices'][0]['message']['function_call']={}
+                    response['choices'][0]['message']['function_call']["name"] = "reasoning"
+                    response['choices'][0]['message']['function_call']['arguments'] = orjson.dumps({
+                        'tool_call':{
+                            'tool_name':"",
+                            'tool_input':""
+                        }
+                    })
+                    return response                    
+                elif '"{}"'.format(function_call['name']) in req_kwargs['messages'][0]['content']:
+                    # Temporal fix for tool call without reasoning
+                    logger.typewriter_log("Warning: Detect tool call without reasoning",Fore.YELLOW)
+                    response['choices'][0]['message']['function_call']['arguments'] = orjson.dumps({
+                        'tool_call':{
+                            'tool_name':response['choices'][0]['message']['function_call']['name'],
+                            'tool_input':response['choices'][0]['message']['function_call']['arguments']
+                        }
+                    })
+                    return response
+            except Exception as e:
+                print("error")
                 return response
 
             error_message = {

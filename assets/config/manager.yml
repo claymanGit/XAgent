@@ -6,6 +6,7 @@ builtin_monitor: True
 
 node:
   creation_wait_seconds: 30
+  #toolserver 控制tool node的开关，时间单位min，如果node超过这个时间没有被访问，则关闭这个node
   idling_close_minutes: 30
   health_check: true
   health_check_interval: 1

@@ -289,8 +289,10 @@ class TaskHandler():
             config=self.config,
             agent_dispatcher=self.agent_dispatcher,
         )
-
-        summary = posterior_data["summary"]
+        if "summary" not in posterior_data:
+            summary = ""
+        else:
+            summary = posterior_data["summary"]
         terminal_plan.data.action_list_summary = summary
 
         if "reflection_of_plan" in posterior_data.keys():
